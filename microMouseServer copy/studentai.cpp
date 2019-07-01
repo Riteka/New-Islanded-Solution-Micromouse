@@ -41,7 +41,7 @@ void microMouseServer::studentAI()
 */
 
 //count is to keep track of how many left turns are made consecutively
-        if (!isWallRight() && direction==0 && (!tracker[x+1][y][1]==0)) {
+        if (!isWallRight() && direction==0 && (!tracker[x+1][y]==0)) {
             direction = 1;
             tracker[x][y][1]++;
             x=x+1;
@@ -50,7 +50,7 @@ void microMouseServer::studentAI()
             count = 0; //if there was a left turn followed by this, count will be set to 0 again, since it's a consecutive left turn isn't possible
             void printUI(const char *turnright);
         }
-        else if (!isWallRight() && direction==1 && (!tracker[x][y-1][1]==0)) {
+        else if (!isWallRight() && direction==1 && (!tracker[x][y-1]==0)) {
             direction = 2;
             tracker[x][y][2]++;
             y=y-1;
@@ -59,7 +59,7 @@ void microMouseServer::studentAI()
             count = 0;
             void printUI(const char *turnright);
         }
-        else if (!isWallRight() && direction==2 && (!tracker[x-1][y][1]==0)) {
+        else if (!isWallRight() && direction==2 && (!tracker[x-1][y]==0)) {
             direction= 3;
             tracker[x][y][3]++;
             x=x-1;
@@ -68,7 +68,7 @@ void microMouseServer::studentAI()
             count = 0;
             void printUI(const char *turnright);
         }
-        else if (!isWallRight() && direction == 3 && (!tracker[x][y+1][1]==0)) {
+        else if (!isWallRight() && direction == 3 && (!tracker[x][y+1]==0)) {
             direction = 0;
             tracker[x][y][0]++;
             y=y+1;
@@ -79,54 +79,71 @@ void microMouseServer::studentAI()
         }
 
 
-
-    else if(!isWallForward()) {
-        if (direction==0) {
+        else if (!isWallForward() && direction==0 && (!tracker[x][y+1]==0)) {
             tracker[x][y][0]++;
             y=y+1;
+            moveForward();
+            count = 0; //if there was a left turn followed by this, count will be set to 0 again, since it's a consecutive left turn isn't possible
+            void printUI (const char *moveforward);
         }
-        if (direction==1) {
+        else if (!isWallForward() && direction==1 && (!tracker[x+1][y]==0)) {
             tracker[x][y][1]++;
             x=x+1;
+            moveForward();
+            count = 0;
+            void printUI (const char *moveforward);
         }
-        if (direction==2) {
+        else if (!isWallForward() && direction==2 && (!tracker[x][y-1]==0)) {
             tracker[x][y][2]++;
             y=y-1;
+            moveForward();
+            count = 0;
+            void printUI (const char *moveforward);
         }
-        if (direction == 3) {
+        else if (!isWallForward() && direction == 3 && (!tracker[x-1][y]==0)) {
             tracker[x][y][3]++;
             x=x-1;
+            moveForward();
+            count = 0;
+            void printUI (const char *moveforward);
         }
-        moveForward();
-        count = 0; //if there was a left turn followed by this, count will be set to 0 again, since it's a consecutive left turn isn't possible
-        void printUI (const char *moveforward);
-    }
-    else if (!isWallLeft()) {
-        if (direction==0) {
+
+        else if (!isWallLeft() && direction==0 && (!tracker[x-1][y]==0)) {
             direction = 3;
             tracker[x][y][3]++;
             x=x-1;
+            turnLeft();
+            moveForward();
+            count++;
+            void printUI (const char *turnleft);
         }
-        if (direction==1) {
+        else if (!isWallLeft() && direction==1 && (!tracker[x][y+1]==0)) {
             direction = 0;
             tracker[x][y][0]++;
             y=y+1;
+            turnLeft();
+            moveForward();
+            count++;
+            void printUI (const char *turnleft);
         }
-        if (direction==2) {
+        else if (!isWallLeft() && direction==2 && (!tracker[x+1][y]==0)) {
             direction= 1;
             tracker[x][y][1]++;
             x=x+1;
+            turnLeft();
+            moveForward();
+            count++;
+            void printUI (const char *turnleft);
         }
-        if (direction == 3) {
+        else if (!isWallLeft() && direction == 3 && (!tracker[x][y-1]==0)) {
             direction = 2;
             tracker[x][y][2]++;
             y=y-1;
+            turnLeft();
+            moveForward();
+            count++;
+            void printUI (const char *turnleft);
         }
-        turnLeft();
-        moveForward();
-        count++;
-        void printUI (const char *turnleft);
-    }
     else {
         //if front, right, and left have walls, the mouse can do a uturn, to face the opposite direction
         turnRight();
