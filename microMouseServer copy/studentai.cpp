@@ -41,7 +41,7 @@ void microMouseServer::studentAI()
 */
 
 //count is to keep track of how many left turns are made consecutively
-        if (!isWallRight() && direction==0 && (tracker[x+1][y][1]==0)) {
+        if (!isWallRight() && direction==0 && (!tracker[x+1][y][1]==0)) {
             direction = 1;
             tracker[x][y][1]++;
             x=x+1;
@@ -50,7 +50,7 @@ void microMouseServer::studentAI()
             count = 0; //if there was a left turn followed by this, count will be set to 0 again, since it's a consecutive left turn isn't possible
             void printUI(const char *turnright);
         }
-        else if (!isWallRight() && direction==1 && (tracker[x][y-1][1]==0)) {
+        else if (!isWallRight() && direction==1 && (!tracker[x][y-1][1]==0)) {
             direction = 2;
             tracker[x][y][2]++;
             y=y-1;
@@ -59,7 +59,7 @@ void microMouseServer::studentAI()
             count = 0;
             void printUI(const char *turnright);
         }
-        else if (!isWallRight() && direction==2 && (tracker[x-1][y][1]==0)) {
+        else if (!isWallRight() && direction==2 && (!tracker[x-1][y][1]==0)) {
             direction= 3;
             tracker[x][y][3]++;
             x=x-1;
@@ -68,7 +68,7 @@ void microMouseServer::studentAI()
             count = 0;
             void printUI(const char *turnright);
         }
-        else if (!isWallRight() && direction == 3 && (tracker[x][y+1][1]==0)) {
+        else if (!isWallRight() && direction == 3 && (!tracker[x][y+1][1]==0)) {
             direction = 0;
             tracker[x][y][0]++;
             y=y+1;
