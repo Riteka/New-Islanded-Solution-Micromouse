@@ -38,10 +38,12 @@ void microMouseServer::studentAI()
  * The following functions are called when you need to output something to the UI or when you have finished the maze
  * void foundFinish();
  * void printUI(const char *mesg);
+ if tracker[x][0][
 */
 
+
 //count is to keep track of how many left turns are made consecutively
-        if (!isWallRight() && direction==0 && (!tracker[x+1][y]==0)) {
+        if (!isWallRight() && direction==0 && (!tracker[x][y][1]==0)) {
             direction = 1;
             tracker[x][y][1]++;
             x=x+1;
@@ -50,7 +52,7 @@ void microMouseServer::studentAI()
             count = 0; //if there was a left turn followed by this, count will be set to 0 again, since it's a consecutive left turn isn't possible
             void printUI(const char *turnright);
         }
-        else if (!isWallRight() && direction==1 && (!tracker[x][y-1]==0)) {
+        else if (!isWallRight() && direction==1 && (!tracker[x][y][2]==0)) {
             direction = 2;
             tracker[x][y][2]++;
             y=y-1;
@@ -59,7 +61,7 @@ void microMouseServer::studentAI()
             count = 0;
             void printUI(const char *turnright);
         }
-        else if (!isWallRight() && direction==2 && (!tracker[x-1][y]==0)) {
+        else if (!isWallRight() && direction==2 && (!tracker[x][y][3]==0)) {
             direction= 3;
             tracker[x][y][3]++;
             x=x-1;
@@ -68,7 +70,7 @@ void microMouseServer::studentAI()
             count = 0;
             void printUI(const char *turnright);
         }
-        else if (!isWallRight() && direction == 3 && (!tracker[x][y+1]==0)) {
+        else if (!isWallRight() && direction == 3 && (!tracker[x][y][0]==0)) {
             direction = 0;
             tracker[x][y][0]++;
             y=y+1;
@@ -79,28 +81,28 @@ void microMouseServer::studentAI()
         }
 
 
-        else if (!isWallForward() && direction==0 && (!tracker[x][y+1]==0)) {
+        else if (!isWallForward() && direction==0 && (!tracker[x][y][0]==0)) {
             tracker[x][y][0]++;
             y=y+1;
             moveForward();
             count = 0; //if there was a left turn followed by this, count will be set to 0 again, since it's a consecutive left turn isn't possible
             void printUI (const char *moveforward);
         }
-        else if (!isWallForward() && direction==1 && (!tracker[x+1][y]==0)) {
+        else if (!isWallForward() && direction==1 && (!tracker[x][y][1]==0)) {
             tracker[x][y][1]++;
             x=x+1;
             moveForward();
             count = 0;
             void printUI (const char *moveforward);
         }
-        else if (!isWallForward() && direction==2 && (!tracker[x][y-1]==0)) {
+        else if (!isWallForward() && direction==2 && (!tracker[x][y][2]==0)) {
             tracker[x][y][2]++;
             y=y-1;
             moveForward();
             count = 0;
             void printUI (const char *moveforward);
         }
-        else if (!isWallForward() && direction == 3 && (!tracker[x-1][y]==0)) {
+        else if (!isWallForward() && direction == 3 && (!tracker[x][y][3]==0)) {
             tracker[x][y][3]++;
             x=x-1;
             moveForward();
@@ -108,7 +110,7 @@ void microMouseServer::studentAI()
             void printUI (const char *moveforward);
         }
 
-        else if (!isWallLeft() && direction==0 && (!tracker[x-1][y]==0)) {
+        else if (!isWallLeft() && direction==0 && (!tracker[x][y][3]==0)) {
             direction = 3;
             tracker[x][y][3]++;
             x=x-1;
@@ -117,7 +119,7 @@ void microMouseServer::studentAI()
             count++;
             void printUI (const char *turnleft);
         }
-        else if (!isWallLeft() && direction==1 && (!tracker[x][y+1]==0)) {
+        else if (!isWallLeft() && direction==1 && (!tracker[x][y][0]==0)) {
             direction = 0;
             tracker[x][y][0]++;
             y=y+1;
@@ -126,7 +128,7 @@ void microMouseServer::studentAI()
             count++;
             void printUI (const char *turnleft);
         }
-        else if (!isWallLeft() && direction==2 && (!tracker[x+1][y]==0)) {
+        else if (!isWallLeft() && direction==2 && (!tracker[x][y][1]==0)) {
             direction= 1;
             tracker[x][y][1]++;
             x=x+1;
@@ -135,7 +137,7 @@ void microMouseServer::studentAI()
             count++;
             void printUI (const char *turnleft);
         }
-        else if (!isWallLeft() && direction == 3 && (!tracker[x][y-1]==0)) {
+        else if (!isWallLeft() && direction == 3 && (!tracker[x][y][2]==0)) {
             direction = 2;
             tracker[x][y][2]++;
             y=y-1;
@@ -146,6 +148,27 @@ void microMouseServer::studentAI()
         }
     else {
         //if front, right, and left have walls, the mouse can do a uturn, to face the opposite direction
+        /* tracker[x][y][direction]=0;
+        if (direction == 0) {
+            y = y-1;
+        }
+        if (direction == 1) {
+            x = x-1;
+        }
+        if (direction == 2) {
+            y = y+1;
+        }
+        if (direction == 3) {
+            x = x+1;
+        }
+        turnRight();
+        turnRight();
+        moveForward();
+        direction = (direction+2) % 4;
+        //while (isWallRight() && isWallLeft()) {
+
+        //   moveForward();
+        //} */
         turnRight();
         turnRight();
         moveForward();
