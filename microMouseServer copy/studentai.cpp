@@ -4,11 +4,17 @@ static int count = 0;
 static int tracker[20][20][4];
 static int direction= 0 ;
 static int matrixinit = false;
-static bool reverse = false;
 static int xx = 0;
 static int yy = 0;
 
-
+void microMouseServer::updateXY(int &x, int &y, int newDir) {
+    switch(newDir) {
+        case 0 : y++; break;
+        case 1 : x++; break;
+        case 2 : y=y-1; break;
+        case 3: x=x-1; break;
+    }
+}
 void microMouseServer::studentAI()
 {
     if (matrixinit == false) {
@@ -21,8 +27,94 @@ void microMouseServer::studentAI()
         }
         matrixinit = true;
     }
-    //int x = 0;
-    //int y = 0;
+
+    bool rightPreferred = true;
+    bool leftPreferred = true;
+    bool forwardPreferred = true;
+
+    int rightDir = (direction + 1) % 4;
+    int leftDir = (direction + 3) % 4;
+    int forwardDir = direction;
+    int reverseDir = (direction + 2) % 4;
+
+
+    if (isWallRight()) {
+        rightPreferred = false;
+    }
+    if (isWallLeft()) {
+        leftPreferred = false;
+    }
+    if (isWallForward()) {
+        forwardPreferred = false ;
+    }
+
+    if (rightPreferred && forwardPreferred) {
+        if (tracker[xx][yy][forwardDir] < tracker[xx][yy][rightDir]) {
+            rightPreferred = false;
+        }
+        else {
+            forwardPreferred = false;
+        }
+    }
+
+    if (leftPreferred == true) {
+        if (rightPreferred) {
+            if (tracker[xx][yy][leftDir] < tracker[xx][yy][rightDir]) {
+                rightPreferred = false;
+            }
+            else {
+                leftPreferred = false;
+            }
+        }
+        if (forwardPreferred) {
+            if (tracker[xx][yy][leftDir] < tracker[xx][yy][forwardDir]) {
+                forwardPreferred = false;
+            }
+            else {
+                leftPreferred = false;
+            }
+        }
+    }
+
+
+    if (!isWallRight() && rightPreferred) {
+        count = 0;
+        tracker[xx][yy][rightDir]++;
+        updateXY(xx, yy, rightDir);
+        turnRight();
+        moveForward();
+        direction = rightDir;
+    }
+    else if (!isWallForward() && forwardPreferred) {
+        count = 0;
+        tracker[xx][yy][forwardDir]++;
+        updateXY(xx, yy, forwardDir);
+        moveForward();
+        direction = forwardDir;
+    }
+    else if (!isWallLeft() && leftPreferred) {
+        count++;
+        tracker[xx][yy][leftDir]++;
+        updateXY(xx, yy, leftDir);
+        turnLeft();
+        moveForward();
+        direction = leftDir;
+    }
+    else {
+        count = 0;
+        turnRight();
+        turnRight();
+        tracker[xx][yy][reverseDir]++;
+        updateXY(xx, yy, reverseDir);
+        moveForward();
+        direction = reverseDir;
+    }
+
+    if (count==3) {
+        //when the mouse makes three left turns that designates the end of the maze since it's the only part which is two by two
+        foundFinish();
+    }
+
 /*
  * The following are the eight functions that you can call. Feel free to create your own fuctions as well.
  * Remember that any solution that calls moveForward more than once per call of studentAI() will have points deducted.
@@ -45,161 +137,7 @@ void microMouseServer::studentAI()
 
 
 //count is to keep track of how many left turns are made consecutively
-        if (!isWallRight() && direction==0 && (!tracker[xx][yy][1]==0)) {
-            reverse = false;
-            direction = 1;
-            tracker[xx][yy][1]++;
-            xx=xx+1;
-            turnRight();
-            moveForward();
-            count = 0; //if there was a left turn followed by this, count will be set to 0 again, since it's a consecutive left turn isn't possible
-            void printUI(const char *turnright);
-        }
-        else if (!isWallRight() && direction==1 && (!tracker[xx][yy][2]==0)) {
-            reverse = false;
-            direction = 2;
-            tracker[xx][yy][2]++;
-            yy=yy-1;
-            turnRight();
-            moveForward();
-            count = 0;
-            void printUI(const char *turnright);
-        }
-        else if (!isWallRight() && direction==2 && (!tracker[xx][yy][3]==0)) {
-            reverse = false;
-            direction= 3;
-            tracker[xx][yy][3]++;
-            xx=xx-1;
-            turnRight();
-            moveForward();
-            count = 0;
-            void printUI(const char *turnright);
-        }
-        else if (!isWallRight() && direction == 3 && (!tracker[xx][yy][0]==0)) {
-            reverse = false;
-            direction = 0;
-            tracker[xx][yy][0]++;
-            yy=yy+1;
-            turnRight();
-            moveForward();
-            count = 0;
-            void printUI(const char *turnright);
-        }
 
 
-        else if (!isWallForward() && direction==0 && (!tracker[xx][yy][0]==0)) {
-            if (reverse == true && isWallLeft()) {
-                tracker[xx][yy][ (direction + 2) % 4]=0;
-            }
-            else {
-                tracker[xx][yy][0]++;
-            }
-            yy=yy+1;
-            moveForward();
-            count = 0; //if there was a left turn followed by this, count will be set to 0 again, since it's a consecutive left turn isn't possible
-            void printUI (const char *moveforward);
-        }
-        else if (!isWallForward() && direction==1 && (!tracker[xx][yy][1]==0)) {
-            if (reverse == true && isWallLeft()) {
-                tracker[xx][yy][ (direction + 2) % 4]=0;
-            }
-            else {
-                tracker[xx][yy][1]++;
-            }
-            xx=xx+1;
-            moveForward();
-            count = 0;
-            void printUI (const char *moveforward);
-        }
-        else if (!isWallForward() && direction==2 && (!tracker[xx][yy][2]==0)) {
-            if (reverse == true && isWallLeft()) {
-                tracker[xx][yy][ (direction + 2) % 4]=0;
-            }
-            else {
-                tracker[xx][yy][2]++;
-            }
-            yy=yy-1;
-            moveForward();
-            count = 0;
-            void printUI (const char *moveforward);
-        }
-        else if (!isWallForward() && direction == 3 && (!tracker[xx][yy][3]==0)) {
-            if (reverse == true && isWallLeft()) {
-                tracker[xx][yy][ (direction + 2) % 4]=0;
-            }
-            else {
-                tracker[xx][yy][3]++;
-            }
-            xx=xx-1;
-            moveForward();
-            count = 0;
-            void printUI (const char *moveforward);
-        }
 
-        else if (!isWallLeft() && direction==0 && (!tracker[xx][yy][3]==0)) {
-            reverse == false;
-            direction = 3;
-            tracker[xx][yy][3]++;
-            xx=xx-1;
-            turnLeft();
-            moveForward();
-            count++;
-            void printUI (const char *turnleft);
-        }
-        else if (!isWallLeft() && direction==1 && (!tracker[xx][yy][0]==0)) {
-            reverse == false;
-            direction = 0;
-            tracker[xx][yy][0]++;
-            yy=yy+1;
-            turnLeft();
-            moveForward();
-            count++;
-            void printUI (const char *turnleft);
-        }
-        else if (!isWallLeft() && direction==2 && (!tracker[xx][yy][1]==0)) {
-            reverse == false;
-            direction= 1;
-            tracker[xx][yy][1]++;
-            xx=xx+1;
-            turnLeft();
-            moveForward();
-            count++;
-            void printUI (const char *turnleft);
-        }
-        else if (!isWallLeft() && direction == 3 && (!tracker[xx][yy][2]==0)) {
-            reverse == false;
-            direction = 2;
-            tracker[xx][yy][2]++;
-            yy=yy-1;
-            turnLeft();
-            moveForward();
-            count++;
-            void printUI (const char *turnleft);
-        }
-    else {
-        //if front, right, and left have walls, the mouse can do a uturn, to face the opposite direction
-        tracker[xx][yy][direction]=0;
-        if (direction == 0) {
-            yy = yy-1;
-        }
-        if (direction == 1) {
-            xx = xx-1;
-        }
-        if (direction == 2) {
-            yy = yy+1;
-        }
-        if (direction == 3) {
-            xx = xx+1;
-        }
-        turnRight();
-        turnRight();
-        moveForward();
-        direction = (direction+2) % 4;
-        reverse = true;
-    }
-    if (count==3) {
-        //when the mouse makes three left turns that designates the end of the maze since it's the only part which is two by two
-        void foundFinish();
-        exit(0);
-    }
 }
