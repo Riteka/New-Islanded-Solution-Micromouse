@@ -18,7 +18,8 @@ void microMouseServer::updateXY(int &x, int &y, int newDir) {
 }
 void microMouseServer::studentAI()
 {
-//  the following initializes all the cells of the 20-20-4 matrix with the starting value of 1
+/*  the following initializes all the cells of the 20-20-4 matrix with the starting value of 1; intialized to 1 because originally had a
+    plan to change cell values to 0 to block them when backtracking after reverse */
     if (matrixinit == false) {
         for (int a = 0; a < 20; a = a +1) {
             for (int b = 0; b < 20; b = b +1) {
