@@ -43,6 +43,7 @@ void microMouseServer::studentAI()
 //  presence of wall: if there is a wall in that direction, the mouse will not be able to move there, so the preference will be false
     if (isWallRight()) {
         rightPreferred = false;
+
     }
     if (isWallLeft()) {
         leftPreferred = false;
@@ -94,7 +95,8 @@ void microMouseServer::studentAI()
         updateXY(xx, yy, rightDir);     //changes the x or y coordinate using the created function
         turnRight();
         moveForward();
-        direction = rightDir;           //updates the direction
+        direction = rightDir;  //updates the direction
+        printUI ("turn right");
     }
     else if (!isWallForward() && forwardPreferred) {
         count = 0;
@@ -102,6 +104,7 @@ void microMouseServer::studentAI()
         updateXY(xx, yy, forwardDir);
         moveForward();
         direction = forwardDir;
+        printUI ("move forward");
     }
     else if (!isWallLeft() && leftPreferred) {
         count++;
@@ -110,6 +113,7 @@ void microMouseServer::studentAI()
         turnLeft();
         moveForward();
         direction = leftDir;
+        printUI ("turn left");
     }
     else {
         //  for making a u-turn after reaching a dead-end
@@ -120,6 +124,7 @@ void microMouseServer::studentAI()
         updateXY(xx, yy, reverseDir);
         moveForward();
         direction = reverseDir;
+        printUI ("u-turn");
     }
 
     if (count==3) {
