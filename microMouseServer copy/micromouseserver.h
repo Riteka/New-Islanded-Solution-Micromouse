@@ -53,6 +53,7 @@ private:
     void turnRight();
     void foundFinish();
     void printUI(const char *mesg);
+    void updateXY(int &x, int &y, int newDir);
 
     QTimer *_comTimer;
     QTimer *_aiCallTimer;

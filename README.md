@@ -1,5 +1,6 @@
 # New-Islanded-Solution-Micromouse
 
+
 The idea behind the solution was to move in the direction that is least traveled from the present cell, while also implementing the right-hand rule in the case where some directions are traveled equally. Ideally, at some point, the mouse will be able to reach the goal through this method. 
 
 
